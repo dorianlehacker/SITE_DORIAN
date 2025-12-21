@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>SYSTEM_OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="crt-overlay"></div>
+    <div class="terminal">
+        <header>
+            <p>> INITIALIZING... [OK]</p>
+            <h1 id="title">> NOM_DU_STREAMER</h1>
+            <div id="status-live" class="status-badge offline">STATUS: OFFLINE</div>
+        </header>
+
+        <nav style="margin-top: 30px;">
+            <a href="https://twitch.tv/TON_USER" class="btn">> ACCÉDER AU LIVE</a>
+            <a href="https://discord.gg/LIEN" class="btn">> REJOINDRE LE DISCORD</a>
+        </nav>
+    </div>
+
+    <script>
+        async function checkLive() {
+            const user = localStorage.getItem('twitch_user');
+            const cid = localStorage.getItem('twitch_client');
+            const token = localStorage.getItem('twitch_token');
+
+            if (!user || !cid || !token) return;
+
+            document.getElementById('title').innerText = "> " + user.toUpperCase();
+
+            try {
+                const res = await fetch(`https://api.twitch.tv/helix/streams?user_login=${user}`, {
+                    headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                const badge = document.getElementById('status-live');
+                if (data.data && data.data.length > 0) {
+                    badge.innerText = "STATUS: LIVE NOW";
+                    badge.className = "status-badge online";
+                }
+            } catch (e) { console.error("API Error"); }
+        }
+        checkLive();
+        setInterval(checkLive, 60000);
+    </script>
+</body>
+</html>

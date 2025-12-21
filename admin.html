@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Config_OS - Setup</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div class="terminal">
+        <h1>[ CONFIGURATION DU SYSTÈME ]</h1>
+        <form id="configForm">
+            <p>> NOM D'UTILISATEUR TWITCH :</p>
+            <input type="text" id="username" class="input-retro" required>
+            
+            <p>> CLIENT ID :</p>
+            <input type="text" id="clientID" class="input-retro" required>
+            
+            <p>> ACCESS TOKEN :</p>
+            <input type="password" id="token" class="input-retro" required>
+            
+            <br><br>
+            <button type="submit" class="btn">SAUVEGARDER DANS LE NOYAU</button>
+        </form>
+        <p id="msg" style="margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('configForm');
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            localStorage.setItem('twitch_user', document.getElementById('username').value);
+            localStorage.setItem('twitch_client', document.getElementById('clientID').value);
+            localStorage.setItem('twitch_token', document.getElementById('token').value);
+            document.getElementById('msg').innerText = "DONE: CONFIGURATION APPLIQUÉE.";
+        };
+    </script>
+</body>
+</html>

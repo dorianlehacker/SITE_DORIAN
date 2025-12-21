@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+body {
+    background-color: #050505;
+    color: #00FF41; /* Vert Matrix */
+    font-family: 'VT323', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Effet Scanline (lignes horizontales) */
+.crt-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.terminal {
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    border: 2px solid #00FF41;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+    position: relative;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.online { background: #00FF41; color: black; box-shadow: 0 0 10px #00FF41; }
+.offline { background: #333; color: #888; }
+
+.command { margin-top: 20px; color: #008F11; }
+
+.btn {
+    display: block;
+    color: #00FF41;
+    text-decoration: none;
+    border: 1px solid #00FF41;
+    padding: 10px;
+    margin-top: 5px;
+    transition: all 0.2s;
+}
+
+.btn:hover {
+    background: #00FF41;
+    color: black;
+    box-shadow: 0 0 20px #00FF41;
+}
+
+.input-retro {
+    background: black;
+    border: 1px solid #00FF41;
+    color: #00FF41;
+    padding: 10px;
+    width: 100%;
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-retro:focus {
+    box-shadow: 0 0 10px #00FF41;
+}
+
+/* Animation du curseur qui clignote */
+.cursor {
+    animation: blink 1s infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
