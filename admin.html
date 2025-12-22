@@ -2,35 +2,66 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Config_OS - Setup</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Dashboard - Streamer OS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-section { background: rgba(0,0,0,0.5); padding: 15px; border: 1px solid #00FF41; margin-bottom: 20px; }
+        .locked { opacity: 0.5; pointer-events: none; border-color: #ff4141; }
+        .hint { font-size: 0.8rem; color: #888; }
+    </style>
+</head>
 <body>
-    <div class="terminal">
-        <h1>[ CONFIGURATION DU SYSTÈME ]</h1>
-        <form id="configForm">
-            <p>> NOM D'UTILISATEUR TWITCH :</p>
-            <input type="text" id="username" class="input-retro" required>
-            
-            <p>> CLIENT ID :</p>
-            <input type="text" id="clientID" class="input-retro" required>
-            
-            <p>> ACCESS TOKEN :</p>
-            <input type="password" id="token" class="input-retro" required>
-            
-            <br><br>
-            <button type="submit" class="btn">SAUVEGARDER DANS LE NOYAU</button>
+    <div class="terminal" style="max-width: 800px;">
+        <h1>[ TABLEAU DE BORD DU STREAMER ]</h1>
+        
+        <form id="mainForm">
+            <div id="twitch-section" class="admin-section">
+                <h3>1. CONFIGURATION DU NOYAU (Codes API)</h3>
+                <p class="hint">Ces codes permettent d'afficher ton statut LIVE. Une fois sauvés, ils sont verrouillés.</p>
+                <input type="text" id="u" class="input-retro" placeholder="Twitch Username" required>
+                <input type="text" id="cid" class="input-retro" placeholder="Client ID" required>
+                <input type="password" id="t" class="input-retro" placeholder="Access Token" required>
+            </div>
+
+            <div class="admin-section">
+                <h3>2. PERSONNALISATION DU PROFIL</h3>
+                <p>URL DE TA PHOTO (Imgur, Discord...):</p>
+                <input type="text" id="avatar" class="input-retro" placeholder="https://...">
+                <p>TA BIO :</p>
+                <input type="text" id="bio" class="input-retro" placeholder="Ex: Variété & Chill">
+                <p>LIEN DISCORD :</p>
+                <input type="text" id="discord" class="input-retro" placeholder="Lien d'invitation">
+            </div>
+
+            <button type="submit" class="btn">METTRE À JOUR LE SITE</button>
         </form>
-        <p id="msg" style="margin-top: 20px;"></p>
     </div>
 
     <script>
-        const form = document.getElementById('configForm');
-        form.onsubmit = (e) => {
+        // Au chargement, on remplit avec ce qui existe déjà
+        window.onload = () => {
+            if(localStorage.getItem('twitch_user')) {
+                document.getElementById('u').value = localStorage.getItem('twitch_user');
+                document.getElementById('cid').value = localStorage.getItem('twitch_client');
+                document.getElementById('t').value = localStorage.getItem('twitch_token');
+                // On verrouille visuellement la section Twitch
+                document.getElementById('twitch-section').classList.add('locked');
+            }
+            document.getElementById('avatar').value = localStorage.getItem('user_avatar') || "";
+            document.getElementById('bio').value = localStorage.getItem('user_bio') || "";
+            document.getElementById('discord').value = localStorage.getItem('user_discord') || "";
+        };
+
+        document.getElementById('mainForm').onsubmit = (e) => {
             e.preventDefault();
-            localStorage.setItem('twitch_user', document.getElementById('username').value);
-            localStorage.setItem('twitch_client', document.getElementById('clientID').value);
-            localStorage.setItem('twitch_token', document.getElementById('token').value);
-            document.getElementById('msg').innerText = "DONE: CONFIGURATION APPLIQUÉE.";
+            localStorage.setItem('twitch_user', document.getElementById('u').value);
+            localStorage.setItem('twitch_client', document.getElementById('cid').value);
+            localStorage.setItem('twitch_token', document.getElementById('t').value);
+            localStorage.setItem('user_avatar', document.getElementById('avatar').value);
+            localStorage.setItem('user_bio', document.getElementById('bio').value);
+            localStorage.setItem('user_discord', document.getElementById('user_discord').value);
+            alert("SITE MIS À JOUR !");
+            window.location.href = "index.html";
         };
     </script>
 </body>
