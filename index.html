@@ -8,59 +8,60 @@
 <body>
     <div class="crt-overlay"></div>
     <div class="terminal">
-        <img id="pfp" src="" class="avatar-pixel" alt="Avatar">
+        <img id="pfp" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Lucky" class="avatar-pixel" alt="Avatar">
         <h1 id="title">> CHARGEMENT...</h1>
         <p id="bio-text"></p>
         <div id="status-live" class="status-badge offline">OFFLINE</div>
         
         <nav style="margin-top: 20px;">
             <a id="twitch-link" href="#" class="btn">> VOIR LE LIVE</a>
-            <a id="discord-link" href="#" class="btn">> DISCORD</a>
+            <a id="discord-link" href="#" class="btn">> REJOINDRE LE DISCORD</a>
         </nav>
     </div>
 
     <script>
+        // --- CONFIGURATION DU CADEAU ---
+        const NOM_DU_STREAMER = "ECRIS_SON_PSEUDO_ICI"; // Remplace ici !
+        // ------------------------------
+
         async function init() {
-            const user = localStorage.getItem('twitch_user');
+            const user = localStorage.getItem('twitch_user') || NOM_DU_STREAMER;
             const cid = localStorage.getItem('twitch_client');
             const token = localStorage.getItem('twitch_token');
-            const bg = localStorage.getItem('user_bg');
+            const bg = localStorage.getItem('user_bg') || "https://i.pinimg.com/originals/11/0e/4d/110e4d2938acc8082697a87168d601d3.gif";
 
-            // Appliquer le fond d'écran
-            if(bg) document.body.style.backgroundImage = `url('${bg}')`;
-            
-            // Appliquer Bio et Discord
-            document.getElementById('bio-text').innerText = localStorage.getItem('user_bio') || "";
+            // 1. Appliquer le fond et le nom immédiatement
+            document.body.style.backgroundImage = `url('${bg}')`;
+            document.getElementById('title').innerText = "> " + user.toUpperCase();
+            document.getElementById('bio-text').innerText = localStorage.getItem('user_bio') || "Bienvenue sur mon espace personnel !";
+            document.getElementById('twitch-link').href = "https://twitch.tv/" + user;
             document.getElementById('discord-link').href = localStorage.getItem('user_discord') || "#";
 
-            if (!user || !cid || !token) {
-                document.getElementById('title').innerText = "> CONFIG MANQUANTE";
-                return;
+            // 2. Si on a les codes API, on récupère la vraie photo
+            if (user && cid && token) {
+                try {
+                    const uRes = await fetch(`https://api.twitch.tv/helix/users?login=${user}`, {
+                        headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
+                    });
+                    const uData = await uRes.json();
+                    if(uData.data && uData.data[0]) {
+                        document.getElementById('pfp').src = uData.data[0].profile_image_url;
+                    }
+
+                    const sRes = await fetch(`https://api.twitch.tv/helix/streams?user_login=${user}`, {
+                        headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
+                    });
+                    const sData = await sRes.json();
+                    const badge = document.getElementById('status-live');
+                    if(sData.data.length > 0) {
+                        badge.innerText = "STATUS: LIVE NOW";
+                        badge.className = "status-badge online";
+                    }
+                } catch(e) { console.error("Mode démo actif (Pas de codes API)"); }
+            } else {
+                // Si pas de codes, on peut essayer de mettre une image de test liée au nom
+                document.getElementById('pfp').src = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${user}`;
             }
-
-            try {
-                // Info utilisateur
-                const uRes = await fetch(`https://api.twitch.tv/helix/users?login=${user}`, {
-                    headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
-                });
-                const uData = await uRes.json();
-                if(uData.data[0]) {
-                    document.getElementById('pfp').src = uData.data[0].profile_image_url;
-                    document.getElementById('title').innerText = "> " + uData.data[0].display_name.toUpperCase();
-                    document.getElementById('twitch-link').href = "https://twitch.tv/" + user;
-                }
-
-                // Statut Live
-                const sRes = await fetch(`https://api.twitch.tv/helix/streams?user_login=${user}`, {
-                    headers: { 'Client-ID': cid, 'Authorization': `Bearer ${token}` }
-                });
-                const sData = await sRes.json();
-                const badge = document.getElementById('status-live');
-                if(sData.data.length > 0) {
-                    badge.innerText = "STATUS: LIVE NOW";
-                    badge.className = "status-badge online";
-                }
-            } catch(e) { console.error(e); }
         }
         init();
         setInterval(init, 60000);
