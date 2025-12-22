@@ -30,7 +30,10 @@
         </form>
         <button onclick="localStorage.clear(); location.reload();" style="color:red; background:none; border:none; cursor:pointer; font-family:'VT323'; text-decoration:underline;">Réinitialiser tout le site</button>
     </div>
+<p>> JEUX (séparés par une virgule) :</p>
+<input type="text" id="games" class="input-retro" placeholder="League, Valorant, Minecraft">
 
+localStorage.setItem('user_games', document.getElementById('games').value);
     <script>
         window.onload = () => {
             if(localStorage.getItem('twitch_user')) {
@@ -58,4 +61,5 @@
     </script>
 </body>
 </html>
+
 
