@@ -46,18 +46,32 @@ body {
 
 .btn {
     display: block;
+    width: 100%; /* Pour qu'il prenne toute la largeur comme les inputs */
+    background: transparent; /* Enlève le gris par défaut */
     color: #00FF41;
     text-decoration: none;
     border: 1px solid #00FF41;
-    padding: 10px;
-    margin-top: 5px;
-    transition: all 0.2s;
+    padding: 12px;
+    margin: 10px 0;
+    font-family: 'VT323', monospace; /* Très important pour garder le style pixel */
+    font-size: 1.2rem;
+    transition: 0.2s;
+    text-align: center;
+    cursor: pointer;
+    text-transform: uppercase;
 }
 
 .btn:hover {
     background: #00FF41;
     color: black;
     box-shadow: 0 0 20px #00FF41;
+}
+
+/* On enlève les bordures bizarres que les navigateurs mettent sur les boutons */
+button.btn {
+    outline: none;
+    border-radius: 0;
+    -webkit-appearance: none;
 }
 
 .input-retro {
