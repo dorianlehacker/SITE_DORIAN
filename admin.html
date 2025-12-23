@@ -2,58 +2,92 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Admin</title>
+    <title>Dashboard Admin - Streamer OS</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .preview-box {
+            border: 2px dashed #e94560;
+            padding: 10px;
+            margin-top: 20px;
+            transform: scale(0.8); /* Pour que l'aperçu soit plus petit */
+            background: rgba(0,0,0,0.5);
+        }
+    </style>
 </head>
 <body>
-    <div class="terminal" style="max-width: 500px; overflow-y: auto; max-height: 90vh;">
-        <h2>[ GESTION DU SYSTÈME ]</h2>
+    <div class="terminal" style="max-width: 600px; overflow-y: auto; max-height: 95vh;">
+        <h2>[ CONFIGURATION SYSTÈME ]</h2>
+        
         <form id="adminForm">
             <div class="admin-section">
-                <p>> TWITCH USER :</p>
-                <input type="text" id="u" class="input-retro">
-                <p>> CLIENT ID :</p>
-                <input type="text" id="cid" class="input-retro">
-                <p>> ACCESS TOKEN :</p>
-                <input type="password" id="t" class="input-retro">
+                <p>> TWITCH USER / CLIENT ID / TOKEN :</p>
+                <input type="text" id="u" class="input-retro" placeholder="Pseudo">
+                <input type="text" id="cid" class="input-retro" placeholder="Client ID">
+                <input type="password" id="t" class="input-retro" placeholder="Token">
             </div>
 
             <div class="admin-section">
-                <p>> MA BIO :</p>
+                <p>> BARRE DE NOTIFICATION (NEWS) :</p>
+                <input type="text" id="news" class="input-retro" placeholder="Ex: Live annulé ce soir !">
+                <p>> BIO :</p>
                 <input type="text" id="bio" class="input-retro">
-                <p>> LIEN DISCORD :</p>
-                <input type="text" id="disc" class="input-retro">
-                <p>> JEUX (séparés par virgule) :</p>
-                <input type="text" id="games" class="input-retro" placeholder="League, Minecraft, Art">
-                <p>> URL DU FOND (GIF/IMAGE) :</p>
-                <input type="text" id="bg" class="input-retro" placeholder="Copie l'adresse d'un GIF ici">
             </div>
-            <button type="submit" class="btn" style="background:#e94560 !important; color:white !important;">ENREGISTRER LES MODIFICATIONS</button>
+
+            <div class="admin-section">
+                <p>> PLANNING (LUN, MAR, MER, JEU, VEN, SAM, DIM) :</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+                    <input type="text" id="p1" class="input-retro" placeholder="LUN">
+                    <input type="text" id="p2" class="input-retro" placeholder="MAR">
+                    <input type="text" id="p3" class="input-retro" placeholder="MER">
+                    <input type="text" id="p4" class="input-retro" placeholder="JEU">
+                    <input type="text" id="p5" class="input-retro" placeholder="VEN">
+                    <input type="text" id="p6" class="input-retro" placeholder="SAM">
+                    <input type="text" id="p7" class="input-retro" placeholder="DIM">
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <p>> JEUX (virgules) & FOND (URL) :</p>
+                <input type="text" id="games" class="input-retro" placeholder="Jeux...">
+                <input type="text" id="bg" class="input-retro" placeholder="Lien GIF/Image">
+            </div>
+
+            <button type="submit" class="btn" style="background:#e94560 !important; color:white !important;">SAUVEGARDER LES MODIFICATIONS</button>
         </form>
-        <button onclick="localStorage.clear(); location.reload();" style="color:#666; background:none; border:none; cursor:pointer; font-family:'VT323'; margin-top:15px; text-decoration: underline;">Réinitialiser les données</button>
+
+        <p style="margin-top:30px; color:#aaa;">--- APERÇU EN DIRECT ---</p>
+        <div id="live-preview" class="preview-box">
+            <div id="prev-news" style="background:#e94560; color:white; font-size:0.8rem; padding:2px;"></div>
+            <h3 id="prev-title">> NOM</h3>
+            <p id="prev-bio" style="font-size:0.9rem;"></p>
+        </div>
     </div>
 
     <script>
+        const fields = ['u', 'news', 'bio', 'bg', 'games', 'cid', 't', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+
         window.onload = () => {
-            document.getElementById('u').value = localStorage.getItem('twitch_user') || "";
-            document.getElementById('cid').value = localStorage.getItem('twitch_client') || "";
-            document.getElementById('t').value = localStorage.getItem('twitch_token') || "";
-            document.getElementById('bio').value = localStorage.getItem('user_bio') || "";
-            document.getElementById('disc').value = localStorage.getItem('user_discord') || "";
-            document.getElementById('bg').value = localStorage.getItem('user_bg') || "";
-            document.getElementById('games').value = localStorage.getItem('user_games') || "";
+            fields.forEach(f => {
+                const val = localStorage.getItem('user_' + f) || "";
+                document.getElementById(f).value = val;
+                // Ecouteur pour la prévisualisation
+                document.getElementById(f).addEventListener('input', updatePreview);
+            });
+            updatePreview();
         };
+
+        function updatePreview() {
+            document.getElementById('prev-title').innerText = "> " + (document.getElementById('u').value || "NOM");
+            document.getElementById('prev-bio').innerText = document.getElementById('bio').value || "Ma bio...";
+            document.getElementById('prev-news').innerText = document.getElementById('news').value || "Pas de news.";
+        }
 
         document.getElementById('adminForm').onsubmit = (e) => {
             e.preventDefault();
-            localStorage.setItem('twitch_user', document.getElementById('u').value);
-            localStorage.setItem('twitch_client', document.getElementById('cid').value);
-            localStorage.setItem('twitch_token', document.getElementById('t').value);
-            localStorage.setItem('user_bio', document.getElementById('bio').value);
-            localStorage.setItem('user_discord', document.getElementById('disc').value);
-            localStorage.setItem('user_bg', document.getElementById('bg').value);
-            localStorage.setItem('user_games', document.getElementById('games').value);
-            alert("CONFIGURATION ENREGISTRÉE !");
+            fields.forEach(f => {
+                localStorage.setItem('user_' + f, document.getElementById(f).value);
+            });
+            alert("SYSTÈME MIS À JOUR !");
             window.location.href = "index.html";
         };
     </script>
