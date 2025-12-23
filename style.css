@@ -8,9 +8,9 @@ body {
     align-items: center;
     font-family: 'VT323', monospace;
     background-color: #0d0221;
-    color: #e94560;
 }
 
+/* Fond GIF : caché sur mobile pour la performance */
 .bg-gif {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -19,6 +19,10 @@ body {
     background-position: center;
     image-rendering: pixelated; 
     filter: brightness(0.35) contrast(1.1);
+}
+
+@media (max-width: 800px) {
+    .bg-gif { display: none; }
 }
 
 .crt-overlay {
@@ -38,117 +42,58 @@ body {
     max-width: 1100px;
     align-items: flex-start;
     z-index: 5;
-}
-
-.terminal, .side-panel {
-    background: rgba(15, 12, 41, 0.92);
-    border: 3px solid #e94560;
-    box-shadow: 8px 8px 0px #0f3460;
-    padding: 20px;
-}
-
-.terminal { flex: 2; text-align: center; }
-.side-panel { flex: 1; min-width: 220px; }
-
-.panel-header {
-    border-bottom: 2px solid #e94560;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-    text-align: center;
-    padding-bottom: 5px;
-}
-
-.item {
-    background: rgba(233, 69, 96, 0.1);
-    margin: 8px 0;
-    padding: 10px;
-    border-left: 4px solid #e94560;
-    font-size: 1.1rem;
-    text-align: left;
-}
-
-.avatar-pixel {
-    width: 100px;
-    height: 100px;
-    border: 3px solid #e94560;
-    image-rendering: pixelated;
-    margin-bottom: 10px;
-    object-fit: cover;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    margin: 10px 0;
-    font-weight: bold;
-}
-.online { background: #00FF41; color: black; box-shadow: 0 0 10px #00FF41; }
-.offline { background: #333; color: #888; }
-
-.btn {
-    display: block;
-    width: 100%;
-    background: transparent;
-    color: #e94560 !important;
-    border: 2px solid #e94560 !important;
-    padding: 12px;
-    margin: 10px 0;
-    font-family: 'VT323', monospace;
-    font-size: 1.3rem;
-    text-decoration: none;
-    transition: 0.2s;
-    cursor: pointer;
-    box-sizing: border-box;
-    text-align: center;
-}
-.btn:hover { background: #e94560 !important; color: white !important; box-shadow: 0 0 15px #e94560; }
-
-.btn-admin {
-    display: inline-block;
-    margin-top: 20px;
-    color: rgba(233, 69, 96, 0.4);
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: 0.3s;
-}
-.btn-admin:hover { color: #e94560; text-shadow: 0 0 5px #e94560; }
-
-.input-retro {
-    background: #0f3460;
-    border: 2px solid #e94560;
-    color: #fff;
-    padding: 10px;
-    width: 100%;
-    font-family: 'VT323';
-    margin-bottom: 15px;
-    box-sizing: border-box;
-}
-.admin-section { background: rgba(0,0,0,0.3); padding: 15px; margin-bottom: 15px; }
-
-/* Barre de news défilante ou fixe en haut */
-.news-ticker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: #e94560;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
-    z-index: 20;
-    letter-spacing: 2px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    text-transform: uppercase;
-}
-
-/* On décale un peu le contenu pour ne pas être caché par la barre */
-.main-layout {
     margin-top: 60px;
 }
+
+/* --- SECTIONS ROUGES (Côtés) --- */
+.side-panel {
+    background: rgba(15, 12, 41, 0.92);
+    border: 3px solid #e94560;
+    box-shadow: 6px 6px 0px #0f3460;
+    padding: 20px;
+    color: #e94560;
+    flex: 1;
+    min-width: 220px;
+}
+.side-panel .panel-header { border-bottom: 2px solid #e94560; margin-bottom: 15px; font-size: 1.5rem; text-align: center; }
+.side-panel .item { background: rgba(233, 69, 96, 0.1); margin: 8px 0; padding: 10px; border-left: 4px solid #e94560; }
+
+/* --- SECTION VERTE (Milieu) --- */
+.terminal {
+    background: rgba(15, 12, 41, 0.95);
+    border: 3px solid #00FF41;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+    padding: 25px;
+    color: #00FF41;
+    flex: 2;
+    text-align: center;
+}
+.terminal .avatar-pixel { border: 3px solid #00FF41; width: 100px; height: 100px; image-rendering: pixelated; margin-bottom: 10px; }
+
+/* Boutons verts pour le milieu */
+.btn-green {
+    display: block; width: 100%; background: transparent;
+    color: #00FF41 !important; border: 2px solid #00FF41 !important;
+    padding: 12px; margin: 10px 0; font-family: 'VT323';
+    text-decoration: none; transition: 0.2s; cursor: pointer; text-align: center; font-size: 1.3rem;
+}
+.btn-green:hover { background: #00FF41 !important; color: #000 !important; box-shadow: 0 0 15px #00FF41; }
+
+.btn-admin { display: inline-block; margin-top: 20px; color: rgba(0, 255, 65, 0.4); text-decoration: none; font-size: 0.8rem; }
+.btn-admin:hover { color: #00FF41; text-shadow: 0 0 5px #00FF41; }
+
+/* News Bar */
+.news-ticker {
+    position: fixed; top: 0; left: 0; width: 100%; background: #e94560;
+    color: white; padding: 10px; text-align: center; font-weight: bold; z-index: 20;
+    letter-spacing: 2px; text-transform: uppercase; box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* Admin Styles */
+.input-retro { background: #0f3460; border: 2px solid #e94560; color: #fff; padding: 10px; width: 100%; font-family: 'VT323'; margin-bottom: 10px; box-sizing: border-box; }
+.admin-section { background: rgba(0,0,0,0.3); padding: 15px; margin-bottom: 15px; border-left: 3px solid #e94560; }
 
 @media (max-width: 900px) {
     .main-layout { flex-direction: column; align-items: center; }
     .side-panel, .terminal { width: 100%; }
 }
-
