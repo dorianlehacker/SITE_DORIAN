@@ -61,6 +61,7 @@
 
     <script>
         const fields = ['u', 'news', 'bio', 'bg', 'games', 'cid', 't', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7'];
+        
         window.onload = () => {
             fields.forEach(f => {
                 document.getElementById(f).value = localStorage.getItem('user_' + f) || "";
@@ -68,18 +69,21 @@
             });
             updatePreview();
         };
+
         function updatePreview() {
             document.getElementById('prev-title').innerText = "> " + (document.getElementById('u').value || "STREAMER");
             document.getElementById('prev-bio').innerText = document.getElementById('bio').value || "Ma bio apparaîtra ici...";
         }
+
         document.getElementById('adminForm').onsubmit = (e) => {
             e.preventDefault();
             fields.forEach(f => localStorage.setItem('user_' + f, document.getElementById(f).value));
             alert("MIS À JOUR !");
             window.location.href = "index.html";
         };
+
         function resetSystem() {
-            if(confirm("Attention : Cela va effacer toute la configuration locale. Continuer ?")) {
+            if(confirm("Attention : Cela va effacer toute la configuration locale (Twitch, Planning, Bio...). Continuer ?")) {
                 Object.keys(localStorage).forEach(key => {
                     if(key.startsWith('user_')) localStorage.removeItem(key);
                 });
